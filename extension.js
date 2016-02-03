@@ -32,14 +32,17 @@ appAPI.ready(function($) {
             count_posts = $(".post").length;
         }
     }
+    
+    
     function detect_posts(){
         if (nowURL === 'http://vk.com/feed' || nowURL === 'http://vk.com/al_feed'){
             $(".post").each(function(){
-                var text_post = ($(this).text());
+                var text_post = ($(this).find(".wall_post_text").text());
+                var img_url = ($(this).find(".wall_text").find("img").attr('src'));
                 var id = ($(this).attr('id'));
                 // отправляем тексты сообщений на сервер, удаляем спамовые сообщения
                 appAPI.request.get({
-                    url: 'http://5.100.72.142:3000/spamdetect?text=' + text_post,   // адрес сервера http://5.100.72.142:3000/
+                    url: 'http://5.100.72.142:3000/spamdetect?text=' + text_post + '&img=' + img_url,   // адрес сервера http://5.100.72.142:3000/
                     onSuccess: function(response, additionalInfo) {
                         var tmp = JSON.parse(response);
                         if (tmp["verdict"] === "SPAM"){
