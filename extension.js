@@ -31,18 +31,34 @@ appAPI.ready(function($) {
             detect_posts();
             count_posts = $(".post").length;
         }
-    }
+    }    
     
     
     function detect_posts(){
         if (nowURL === 'http://vk.com/feed' || nowURL === 'http://vk.com/al_feed'){
             $(".post").each(function(){
-                var text_post = ($(this).find(".wall_post_text").text());
-                var img_url = ($(this).find(".wall_text").find("img").attr('src'));
-                var id = ($(this).attr('id'));
-                // отправляем тексты сообщений на сервер, удаляем спамовые сообщения
+            
+                var id = $(this).attr("id");
+                
+                var text_post = ($(this).find(".wall_post_text").text()) + ' ' + ($(this).find(".wall_post_text").find("span").text());  // text of user and text of repost
+                var au_id = ($(this)).find(".wall_text_name").find("a").attr('href');
+                var au_name = ($(this)).find(".wall_text_name").find("a").text();
+                var rel_date = ($(this)).find(".rel_date").text();
+                   
+                var r_au_id = ($(this)).find(".published_by").attr("href");
+                var r_au_name = ($(this)).find(".published_by").text();
+                
+                var commercial = $(this).find(".wall_text_name_explain_promoted_post").text();
+                
+               
+                /*console.log("r_author " + r_au_name +  " " + r_au_id);
+                console.log("text_p " + text_post);
+                console.log("author_p " + au_name + " " + au_id);
+                console.log("rel_date " + rel_date);
+                console.log("commercial " + commercial);*/
+             
                 appAPI.request.get({
-                    url: 'http://5.100.72.142:3000/spamdetect?text=' + text_post + '&img=' + img_url,   // адрес сервера http://5.100.72.142:3000/
+                    url: 'http://5.100.72.142:3000/spamdetect?text=' + text_post,   // адрес сервера http://5.100.72.142:3000/
                     onSuccess: function(response, additionalInfo) {
                         var tmp = JSON.parse(response);
                         if (tmp["verdict"] === "SPAM"){
