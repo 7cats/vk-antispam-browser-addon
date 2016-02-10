@@ -1,7 +1,5 @@
 /**
  * Created by yolomachine on 10.02.2016.
- */
-/**
  * WORK IN PROGRESS
  */
 
