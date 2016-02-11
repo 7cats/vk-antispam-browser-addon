@@ -43,3 +43,4 @@ appAPI.ready(function($){
             postCount = $(".post").length;
         }
     }
+});
