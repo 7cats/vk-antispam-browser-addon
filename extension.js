@@ -5,7 +5,7 @@
 
 appAPI.ready(function($){
     var currentURL = window.location.href;
-    var postCount = 0;
+    var postCount  = 0;
 
     function Window(){
         this.targetURL = "vk.com/feed";
@@ -16,22 +16,25 @@ appAPI.ready(function($){
             return true;
     }
 
-    Window.prototype.refresh = function(){     // href == window.location.href -- setInterval(Window.refresh(window.location.href), 1000)
+    Window.prototype.refresh = function(){
         if (this.check(currentURL))
-            if (postCount != $(".post").length) {
+            if (postCount != $(".post").length){
+                postCount  = $(".post").length;
                 detectPosts();
-                postCount = $(".post").length;
             }
     }
 
     var activeTab = new Window();
-    detectPosts();
 
     l_nwsf.onclick = function(){
         activeTab.refresh()
     }
 
     window.onscroll = function(){
+        activeTab.refresh()
+    }
+
+    window.onload = function(){
         activeTab.refresh()
     }
 
@@ -42,25 +45,22 @@ appAPI.ready(function($){
                 var ID = $(this).attr("id");
                 var spamID = [];
 
-                var postText = ($(this).find(".wall_post_text").text()) + ' ' + ($(this).find(".wall_post_text").find("span").text());  // text of user and text of repost
-                var authorID = ($(this)).find(".wall_text_name").find("a").attr('href');
-                var authorName = ($(this)).find(".wall_text_name").find("a").text();
-                var relDate = ($(this)).find(".rel_date").text();
+                var commercial     =  $(this).find(".wall_text_name_explain_promoted_post").text();
+                var postText       =  $(this).find(".wall_post_text").text() + ' ' + $(this).find(".wall_post_text").find("span").text();
+                var relDate        =  $(this).find(".rel_date").text();
+                var authorID       =  $(this).find(".wall_text_name").find("a").attr('href');
+                var authorName     =  $(this).find(".wall_text_name").find("a").text();
+                var repAuthorID    =  $(this).find(".published_by").attr("href");
+                var repAuthorName  =  $(this).find(".published_by").text();
 
-                var repAuthorID = ($(this)).find(".published_by").attr("href");
-                var repAuthorName  = ($(this)).find(".published_by").text();
-
-                var commercial = $(this).find(".wall_text_name_explain_promoted_post").text();
-
-
-                console.log("r_author " + repAuthorName +  " " + repAuthorID);
-                console.log("text_p " + postText);
-                console.log("author_p " + authorName + " " + authorID);
-                console.log("rel_date " + relDate);
                 console.log("commercial " + commercial);
+                console.log("text_p "     + postText);
+                console.log("rel_date "   + relDate);
+                console.log("author_p "   + authorName    + " " + authorID);
+                console.log("r_author "   + repAuthorName + " " + repAuthorID);
 
                 appAPI.request.get({
-                    url: 'http://5.100.72.142:3000/spamdetect?text=' + postText,   // адрес сервера http://5.100.72.142:3000/
+                    url: 'http://5.100.72.142:3000/spamdetect?text=' + postText,
                     onSuccess: function(response, additionalInfo) {
                         var temp = JSON.parse(response);
                         if (temp["verdict"] === "SPAM"){
