@@ -39,7 +39,8 @@ appAPI.ready(function($){
         if (activeTab.check(currentURL)){
             $(".post").each(function(){
 
-                var id = $(this).attr("id");
+                var ID = $(this).attr("id");
+                var spamID = [];
 
                 var postText = ($(this).find(".wall_post_text").text()) + ' ' + ($(this).find(".wall_post_text").find("span").text());  // text of user and text of repost
                 var authorID = ($(this)).find(".wall_text_name").find("a").attr('href');
@@ -61,11 +62,11 @@ appAPI.ready(function($){
                 appAPI.request.get({
                     url: 'http://5.100.72.142:3000/spamdetect?text=' + postText,   // адрес сервера http://5.100.72.142:3000/
                     onSuccess: function(response, additionalInfo) {
-                        var tmp = JSON.parse(response);
-                        if (tmp["verdict"] === "SPAM"){
+                        var temp = JSON.parse(response);
+                        if (temp["verdict"] === "SPAM"){
                             $("#" + id).hide();
-                            id_spam[id_spam.length] = id;
-                            console.log(id_spam.length);
+                            spamID[spamID.length] = ID;
+                            console.log(spamID.length);
                         }
                     }
                 });
