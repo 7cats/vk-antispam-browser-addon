@@ -17,11 +17,10 @@ appAPI.ready(function($){
     }
 
     Window.prototype.refresh = function(){
-        if (this.check(currentURL))
-            if (postCount != $(".post").length){
-                postCount  = $(".post").length;
-                detectPosts();
-            }
+        if (this.check(currentURL)){
+            postCount  = $(".post").length;
+            detectPosts();
+        }
     }
 
     var activeTab = new Window();
@@ -30,12 +29,13 @@ appAPI.ready(function($){
         activeTab.refresh()
     }
 
-    window.onscroll = function(){
+    window.onload = function(){
         activeTab.refresh()
     }
 
-    window.onload = function(){
-        activeTab.refresh()
+    window.onscroll = function(){
+        if (postCount != $(".post").length)
+            activeTab.refresh()
     }
 
     function detectPosts(){
@@ -46,7 +46,7 @@ appAPI.ready(function($){
                 var spamID = [];
 
                 var commercial     =  $(this).find(".wall_text_name_explain_promoted_post").text();
-                var postText       =  $(this).find(".wall_post_text").text() + ' ' + $(this).find(".wall_post_text").find("span").text();
+                var postText       =  $(this).find(".wall_post_text").text() + " " + $(this).find(".wall_post_text").find("span").text();
                 var relDate        =  $(this).find(".rel_date").text();
                 var authorID       =  $(this).find(".wall_text_name").find("a").attr('href');
                 var authorName     =  $(this).find(".wall_text_name").find("a").text();
